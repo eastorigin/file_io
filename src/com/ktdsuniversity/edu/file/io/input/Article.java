@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Article {
 
@@ -37,9 +39,8 @@ public class Article {
 		
 		return sb.toString();
 	}
-
-	public static void main(String[] args) {
-		
+	
+	public static void readAllArticles() {
 //		String line = "1|첫 번째 게시글입니다.|첫 번째 게시글의 내용입니다.|신동원|46";
 //		Article article = new Article(line);
 //		System.out.println(article);
@@ -68,4 +69,59 @@ public class Article {
 			System.out.println(ioe.getMessage());
 		}
 	}
+	
+	public static void writeArticle() {
+		
+		Scanner keyboard = new Scanner(System.in);
+		
+		System.out.println("글 번호를 입력해주세요");
+		int articleNumber = keyboard.nextInt();
+		
+		System.out.println("글 제목을 입력해주세요");
+		keyboard.nextLine();
+		String title = keyboard.nextLine();
+		
+		System.out.println("글 내용을 입력해주세요");
+		String description = keyboard.nextLine();
+		
+		System.out.println("작성자를 입력해주세요");
+		String author = keyboard.nextLine();
+		
+		System.out.println("조회수를 입력해주세요");
+		int viewCount = keyboard.nextInt();
+		
+//		String line = "1|첫 번째 게시글입니다.|첫 번째 게시글의 내용입니다.|신동원|46";
+		String formatLine = "%d|%s|%s|%s|%d\n";
+		String line = String.format(formatLine, articleNumber, title, description, author, viewCount);
+		
+		File file = new File("C:\\\\Java Exam","articles.txt");
+		
+		if (!file.getParentFile().exists()) {
+			file.getParentFile().mkdirs();
+		}
+		
+		try {
+			// articles.txt 파일을 덮어쓰는 코드
+			// Files.writeString(file.toPath(), line, Charset.defaultCharset());
+			// articles.txt 파일의 마지막에 글을 이어 쓴다
+			Files.writeString(file.toPath(), line, Charset.defaultCharset(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+		}
+		catch (IOException ioe) {
+			System.out.println(ioe.getMessage());
+		}
+		finally {
+			System.out.println("게시글 작성을 완료했습니다");
+		}
+	}
+
+	public static void main(String[] args) {
+		
+		Article.writeArticle();
+		Article.writeArticle();
+		Article.writeArticle();
+		
+		
+		Article.readAllArticles();
+	}
+
 }
